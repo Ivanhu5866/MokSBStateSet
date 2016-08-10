@@ -42,5 +42,11 @@ efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 		1,
 		&Data);
 
+	uefi_call_wrapper(RT->ResetSystem, 4,
+		EfiResetWarm,
+		EFI_SUCCESS,
+		0,
+		NULL);
+
 	return EFI_SUCCESS;
 }
