@@ -31,12 +31,21 @@ efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 	EFI_GUID VariableMoksbGuid = MOKSBSTATE_GUID;
 	UINT8 Data=1;
 
-	VariableAttr = (EFI_VARIABLE_NON_VOLATILE|EFI_VARIABLE_BOOTSERVICE_ACCESS);	
+	VariableAttr = (EFI_VARIABLE_NON_VOLATILE|EFI_VARIABLE_BOOTSERVICE_ACCESS);
 
 	InitializeLib(ImageHandle, SystemTable);
 
 	uefi_call_wrapper(RT->SetVariable, 5,
 		L"MokSBState",
+		&VariableMoksbGuid,
+		VariableAttr,   
+		1,
+		&Data);
+
+	VariableAttr |= EFI_VARIABLE_RUNTIME_ACCESS;
+
+	uefi_call_wrapper(RT->SetVariable, 5,
+		L"MokSBStateRT",
 		&VariableMoksbGuid,
 		VariableAttr,   
 		1,
