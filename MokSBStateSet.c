@@ -30,26 +30,44 @@ efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 	UINT32 VariableAttr;
 	EFI_GUID VariableMoksbGuid = MOKSBSTATE_GUID;
 	UINT8 Data=1;
+	EFI_STATUS status;
+
 
 	VariableAttr = (EFI_VARIABLE_NON_VOLATILE|EFI_VARIABLE_BOOTSERVICE_ACCESS);
 
 	InitializeLib(ImageHandle, SystemTable);
 
-	uefi_call_wrapper(RT->SetVariable, 5,
+	status = uefi_call_wrapper(RT->SetVariable, 5,
 		L"MokSBState",
 		&VariableMoksbGuid,
 		VariableAttr,   
 		1,
 		&Data);
 
+	if (status != EFI_SUCCESS) {
+		Print(L"Writing MokSBState variable error\n");
+	}
+	else {
+		Print(L"Wrote MokSBState variable\n");
+	}
+
 	VariableAttr |= EFI_VARIABLE_RUNTIME_ACCESS;
 
-	uefi_call_wrapper(RT->SetVariable, 5,
+	status = uefi_call_wrapper(RT->SetVariable, 5,
 		L"MokSBStateRT",
 		&VariableMoksbGuid,
 		VariableAttr,   
 		1,
 		&Data);
+
+	if (status != EFI_SUCCESS) {
+		Print(L"Writing MokSBStateRT variable error!\n");
+	}
+	else {
+		Print(L"Wrote MokSBState variable\n");
+	}
+
+	uefi_call_wrapper(BS->Stall, 1, 10000000);
 
 	uefi_call_wrapper(RT->ResetSystem, 4,
 		EfiResetWarm,
