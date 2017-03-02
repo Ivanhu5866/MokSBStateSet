@@ -41,4 +41,4 @@ efibootmgr -n $BOOTNUM | grep "BootNext: $BOOTNUM" > /dev/null 2>&1 || exit $?
 
 #echo $BOOTNUM
 
-#reboot
+reboot
